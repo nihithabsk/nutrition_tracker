@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Food</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Edit Food Item</h1>
+    </header>
+    <main>
+        <form method="POST">
+            <div>
+                <label for="food_name">Food Name:</label>
+                <input type="text" id="food_name" name="food_name" value="{{ food_item.name }}" required>
+            </div>
+            <div>
+                <label for="calories_per_unit">Calories Per Unit:</label>
+                <input type="number" id="calories_per_unit" name="calories_per_unit" step="0.01" value="{{ food_item.calories_per_unit }}" required>
+            </div>
+            <button type="submit">Update Food</button>
+        </form>
+    </main>
+</body>
+</html>

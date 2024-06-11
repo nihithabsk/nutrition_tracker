@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Welcome to the Nutrition Tracker</h2>
+{% if daily_calories %}
+<p>Your daily calorie intake: {{ daily_calories }} calories</p>
+{% else %}
+<p>Please log in to see your daily calorie intake.</p>
+{% endif %}
+{% endblock %}

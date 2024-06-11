@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>User Activity History</h1>
+    </header>
+    <main>
+        <h2>Daily Calorie Intake</h2>
+        <ul>
+            {% for date, calories in daily_calories.items() %}
+            <li>{{ date }}: {{ calories }} calories</li>
+            {% endfor %}
+        </ul>
+        <h2>Activity Log</h2>
+        <ul>
+            {% for activity in activities %}
+            <li>{{ activity.date }} - {{ activity.food_name }}: {{ activity.quantity }} units, {{ activity.calories_consumed() }} calories</li>
+            {% endfor %}
+        </ul>
+    </main>
+</body>
+</html>
