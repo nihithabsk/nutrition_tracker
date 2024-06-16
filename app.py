@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime, date
+from datetime import date
+import pandas as pd
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@localhost/nutrify'
@@ -33,6 +34,8 @@ class UserActivity(db.Model):
             return food_item.calories_per_unit * self.quantity
         return 0.0
 
+# Load the allergen data
+allergen_data = pd.read_excel('new.xlsx')
 
 @app.route('/')
 def index():
@@ -101,7 +104,6 @@ def add_food():
     
     return redirect(url_for('login'))
 
-
 @app.route('/history')
 def history():
     user_id = session.get('user_id')
@@ -118,11 +120,11 @@ def history():
         return render_template('history.html', activities=activities, daily_calories=daily_calories)
     return redirect(url_for('index'))
 
-
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
     return redirect(url_for('index'))
+
 @app.route('/edit_food/<int:food_id>', methods=['GET', 'POST'])
 def edit_food(food_id):
     food_item = FoodItem.query.get(food_id)
@@ -139,6 +141,7 @@ def delete_food(food_id):
     db.session.delete(food_item)
     db.session.commit()
     return redirect(url_for('add_food'))
+
 @app.route('/edit_activity/<int:activity_id>', methods=['GET', 'POST'])
 def edit_activity(activity_id):
     activity = UserActivity.query.get(activity_id)
@@ -166,6 +169,20 @@ def delete_activity(activity_id):
             db.session.commit()
     return redirect(url_for('add_food'))
 
+@app.route('/allergen_info', methods=['GET', 'POST'])
+def allergen_info():
+    lost_nutrients = None
+    alternatives = None
+
+    if request.method == 'POST':
+        allergen = request.form['allergen']
+        allergen_info = allergen_data[allergen_data['Food Allergen'].str.lower() == allergen.lower()]
+
+        if not allergen_info.empty:
+            lost_nutrients = allergen_info.iloc[0]['Lost Nutrients']
+            alternatives = allergen_info.iloc[0]['Alternatives']
+    
+    return render_template('allergen_info.html', lost_nutrients=lost_nutrients, alternatives=alternatives)
 
 if __name__ == '__main__':
     with app.app_context():

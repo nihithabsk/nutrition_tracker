@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Allergen Info</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Allergen Information</h1>
+        <nav>
+            <a href="{{ url_for('index') }}">Home</a>
+            {% if 'user_id' in session %}
+                <a href="{{ url_for('add_food') }}">Add Food</a>
+                <a href="{{ url_for('history') }}">History</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+                <a href="{{ url_for('register') }}">Register</a>
+            {% endif %}
+        </nav>
+    </header>
+    <main>
+        <form method="POST">
+            <label for="allergen">Enter Food Allergen:</label>
+            <input type="text" id="allergen" name="allergen" required>
+            <button type="submit">Submit</button>
+        </form>
+        
+        {% if lost_nutrients or alternatives %}
+        <h2>Results</h2>
+        {% if lost_nutrients %}
+        <p><strong>Lost Nutrients:</strong> {{ lost_nutrients }}</p>
+        {% endif %}
+        {% if alternatives %}
+        <p><strong>Alternatives:</strong> {{ alternatives }}</p>
+        {% endif %}
+        {% endif %}
+    </main>
+</body>
+</html>
